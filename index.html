@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Clinic Leak Audit — First Business Solutions</title>
+<meta name="description" content="See exactly where your clinic loses booked consults, and what it's costing you each month. A free line-by-line audit for weight loss and men's health clinic owners." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bone:#f6f3ec; --paper:#fffdf8; --card:#ffffff;
+    --ink:#16232e; --ink2:#33454f; --muted:#6a7982;
+    --line:#e6e0d4; --line2:#d8d0bf;
+    --sage:#2f6b5b; --sage-soft:#e7f0ec;
+    --clay:#c05a2b; --clay-dk:#a4491f; --clay-soft:#f7e9df;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Public Sans',system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bone);color:var(--ink);line-height:1.62;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  h1,h2,h3,.serif{font-family:'Fraunces',Georgia,serif;letter-spacing:-.01em}
+  a{color:inherit;text-decoration:none}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--sage)}
+
+  .btn{display:inline-flex;align-items:center;gap:9px;background:var(--clay);color:#fff;font-weight:700;font-size:17px;padding:17px 30px;border-radius:10px;box-shadow:0 10px 26px rgba(192,90,43,.28);transition:background .2s,transform .2s;border:none;cursor:pointer}
+  .btn:hover{background:var(--clay-dk);transform:translateY(-1px)}
+  .btn.sm{padding:11px 20px;font-size:14px}
+  .micro{color:var(--muted);font-size:13.5px;margin-top:12px}
+
+  /* header */
+  header{background:var(--paper);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:1120px;margin:0 auto}
+  .logo{height:68px;width:auto;mix-blend-mode:multiply}
+
+  /* hero */
+  .hero{padding:70px 0 56px}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:52px;align-items:center}
+  .hero h1{font-size:clamp(33px,4.6vw,54px);line-height:1.04;font-weight:600;margin:18px 0 0}
+  .hero h1 em{font-style:italic;color:var(--clay)}
+  .hero .sub{font-size:clamp(17px,2.1vw,20px);color:var(--ink2);max-width:560px;margin:22px 0 30px}
+  .cred{display:flex;flex-wrap:wrap;gap:18px;margin-top:26px;color:var(--muted);font-size:13px;font-weight:600}
+  .cred span{display:flex;align-items:center;gap:7px}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--sage)}
+
+  /* leak snapshot card (bespoke data-viz, replaces stock photo) */
+  .snap{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px;box-shadow:0 24px 60px -30px rgba(22,35,46,.35)}
+  .snap .tag{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .snap h4{font-family:'Public Sans';font-size:15px;font-weight:700;margin:2px 0 18px}
+  .bar{display:flex;align-items:center;gap:12px;margin:9px 0}
+  .bar .lbl{width:112px;font-size:12.5px;color:var(--ink2);flex:0 0 auto}
+  .bar .track{flex:1;height:26px;background:var(--bone);border-radius:6px;overflow:hidden}
+  .bar .fill{height:100%;background:linear-gradient(90deg,var(--sage),#3f8874);display:flex;align-items:center;padding-left:10px;color:#fff;font-size:12px;font-weight:700}
+  .bar .fill.warn{background:linear-gradient(90deg,var(--clay),#d5713f)}
+  .snap .total{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line2);display:flex;justify-content:space-between;align-items:baseline}
+  .snap .total b{font-family:'Fraunces';font-size:27px;font-weight:600;color:var(--clay)}
+  .snap .total span{font-size:12.5px;color:var(--muted)}
+
+  /* sections */
+  section{padding:64px 0}
+  .band{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  h2{font-size:clamp(26px,3.4vw,38px);font-weight:600;line-height:1.1}
+  .lede{color:var(--ink2);font-size:18px;max-width:620px;margin-top:14px}
+
+  /* itemised audit scope — numbered vertical list (not a card grid) */
+  .scope{margin-top:40px;border-top:1px solid var(--line)}
+  .item{display:grid;grid-template-columns:56px 1fr;gap:22px;padding:26px 0;border-bottom:1px solid var(--line);align-items:start}
+  .item .num{font-family:'Fraunces';font-size:30px;font-weight:500;color:var(--clay);line-height:1}
+  .item h3{font-size:20px;font-weight:600;margin-bottom:5px}
+  .item p{color:var(--ink2);font-size:15.5px;max-width:640px}
+
+  /* who it's for */
+  .icp{display:grid;grid-template-columns:1fr 1fr;gap:14px 40px;margin-top:26px;max-width:760px}
+  .icp div{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;color:var(--ink2)}
+  .tick{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--sage-soft);color:var(--sage);display:grid;place-items:center;font-size:13px;font-weight:800;margin-top:1px}
+
+  /* guarantee */
+  .guarantee{background:var(--sage);color:#eafff7;border-radius:18px;padding:44px 34px;text-align:center}
+  .guarantee .eyebrow{color:#bfe9db}
+  .guarantee p{font-family:'Fraunces';font-size:clamp(21px,2.7vw,29px);font-weight:500;max-width:780px;margin:14px auto 0;line-height:1.32}
+
+  /* form */
+  .formwrap{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 40px 90px -50px rgba(22,35,46,.5);max-width:820px;margin:0 auto}
+  .formhead{text-align:center;padding:38px 26px 6px}
+  .formhead h2{font-size:clamp(24px,3vw,32px)}
+  .formhead .rr{display:inline-flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:16px;color:var(--sage);font-size:13.5px;font-weight:700}
+  .formhead .rr span{display:flex;align-items:center;gap:6px}
+  iframe{display:block;width:100%;min-height:900px;border:none;background:#fff}
+
+  /* faq */
+  .faq{max-width:780px;margin:32px auto 0}
+  details{border-bottom:1px solid var(--line);padding:20px 4px}
+  summary{font-family:'Fraunces';font-size:19px;font-weight:500;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:'+';color:var(--clay);font-size:24px;font-weight:400}
+  details[open] summary::after{content:'–'}
+  details p{color:var(--ink2);font-size:15.5px;margin-top:12px;max-width:680px}
+
+  /* founder */
+  .founder{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:30px 32px;max-width:820px;margin:0 auto;display:flex;gap:22px;align-items:flex-start}
+  .founder .badge{flex:0 0 auto;width:52px;height:52px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:'Fraunces';font-size:22px;font-weight:600}
+  .founder p{color:var(--ink2);font-size:15.5px}
+  .founder .sig{font-family:'Fraunces';color:var(--ink);font-weight:600;margin-top:10px}
+
+  /* footer */
+  footer{background:var(--ink);color:#aeb9c0;padding:40px 0;font-size:13px}
+  .comply{text-align:center;letter-spacing:.14em;text-transform:uppercase;font-size:11px;font-weight:600;color:#7f8d95}
+  .foot-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:20px}
+
+  .cta-center{text-align:center;margin-top:40px}
+
+  @media(max-width:820px){
+    .hero-grid{grid-template-columns:1fr;gap:36px}
+    .icp{grid-template-columns:1fr}
+    iframe{min-height:1050px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <img class="logo" src="logo.jpg" alt="First Business Solutions" />
+    <a class="btn sm" href="#audit">Get My Free Leak Audit</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">For weight loss &amp; men's health clinic owners</p>
+      <h1>See exactly where your clinic <em>loses booked consults</em>, and what it's costing you every month.</h1>
+      <p class="sub">You already pay to bring the enquiries in. Most clinics quietly lose 20 to 40% of them to missed calls, slow follow up, no shows, and a dormant patient list nobody works. We map every one and show you the money slipping through, free.</p>
+      <a class="btn" href="#audit">Get My Free Leak Audit</a>
+      <p class="micro">Free. No obligation. We ring you within one business day, and you keep the breakdown either way.</p>
+      <div class="cred">
+        <span><i class="dot"></i> Google certified agency</span>
+        <span><i class="dot"></i> Registered Australian business</span>
+        <span><i class="dot"></i> We never touch your patient data</span>
+      </div>
+    </div>
+
+    <!-- bespoke leak data-viz, not a stock photo -->
+    <div class="snap">
+      <div class="tag">Example · a typical clinic</div>
+      <h4>Where the booked consults go</h4>
+      <div class="bar"><div class="lbl">Enquiries in</div><div class="track"><div class="fill" style="width:100%">200 / month</div></div></div>
+      <div class="bar"><div class="lbl">Actually answered</div><div class="track"><div class="fill" style="width:70%">140</div></div></div>
+      <div class="bar"><div class="lbl">Turned up</div><div class="track"><div class="fill" style="width:52%">104</div></div></div>
+      <div class="bar"><div class="lbl">Leaking away</div><div class="track"><div class="fill warn" style="width:48%">96 lost</div></div></div>
+      <div class="total"><span>Recoverable, every single month</span><b>$72,720</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- WHAT THE AUDIT SHOWS (itemised scope = trust substitute) -->
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow">What we show you</p>
+    <h2>A line-by-line breakdown of the consults you paid for and never booked</h2>
+    <p class="lede">No vague "you could do better." We inspect the five places every clinic leaks, put a real dollar figure on each, and hand you the numbers, whether you work with us or not.</p>
+
+    <div class="scope">
+      <div class="item"><div class="num">01</div><div><h3>Missed &amp; after-hours enquiries</h3><p>How many calls ring out when the front desk is busy or after close. At a cash-pay clinic, that patient simply rings the next clinic on Google.</p></div></div>
+      <div class="item"><div class="num">02</div><div><h3>Speed to lead</h3><p>How fast enquiries get a reply, and how many book with a faster competitor while yours sits in a queue.</p></div></div>
+      <div class="item"><div class="num">03</div><div><h3>No-shows</h3><p>The booked consults that never turn up, and how many are recoverable with the right reminder and recovery flow.</p></div></div>
+      <div class="item"><div class="num">04</div><div><h3>Dormant patients</h3><p>The past patients gone quiet in your database. Pure found money sitting in a list nobody is working.</p></div></div>
+      <div class="item"><div class="num">05</div><div><h3>Review velocity</h3><p>Whether thin or stale reviews are quietly suppressing conversion on every enquiry you already pay to generate.</p></div></div>
+    </div>
+
+    <div class="cta-center">
+      <a class="btn" href="#audit">Show Me My Lost Consults</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Who it's for</p>
+    <h2>Built for owner-run clinics with real patient flow</h2>
+    <div class="icp">
+      <div><span class="tick">✓</span> Weight loss, men's health, hormone or wellness clinics</div>
+      <div><span class="tick">✓</span> Cash-pay or subscription programmes</div>
+      <div><span class="tick">✓</span> Owner or practice manager makes the call</div>
+      <div><span class="tick">✓</span> Enough enquiry volume to have real leakage</div>
+    </div>
+    <p class="lede" style="margin-top:22px">If you're a solo practitioner with no marketing or patient base yet, this isn't for you, and we'll tell you so.</p>
+  </div>
+</section>
+
+<!-- GUARANTEE -->
+<section class="band" style="padding-top:52px;padding-bottom:52px">
+  <div class="wrap">
+    <div class="guarantee">
+      <p class="eyebrow">Our guarantee</p>
+      <p>If you decide to work with us, we set a booked-consults target on your own numbers. Hit it in the first 30 days, or we keep working retainer-free until you do.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FORM -->
+<section id="audit">
+  <div class="wrap">
+    <div class="formwrap">
+      <div class="formhead">
+        <p class="eyebrow" style="color:var(--clay)">Free · takes 60 seconds</p>
+        <h2>Get your clinic's leak breakdown</h2>
+        <div class="rr">
+          <span><i class="dot"></i> Free, no obligation</span>
+          <span><i class="dot"></i> We call within 1 business day</span>
+          <span><i class="dot"></i> Keep the breakdown either way</span>
+        </div>
+      </div>
+      <iframe
+        src="https://api.leadconnectorhq.com/widget/form/4Ptsr4cE2FJoQn5ySrIU"
+        id="inline-4Ptsr4cE2FJoQn5ySrIU"
+        data-layout="{'id':'INLINE'}"
+        data-trigger-type="alwaysShow"
+        data-trigger-value=""
+        data-activation-type="alwaysActivated"
+        data-activation-value=""
+        data-deactivation-type="neverDeactivate"
+        data-deactivation-value=""
+        data-form-name="Clinic Leak Audit"
+        data-height="900"
+        data-layout-iframe-id="inline-4Ptsr4cE2FJoQn5ySrIU"
+        data-form-id="4Ptsr4cE2FJoQn5ySrIU"
+        data-cookie-consent="true"
+        data-cookie-consent-provider="auto"
+        title="Clinic Leak Audit">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow center" style="text-align:center">Before you ask</p>
+    <h2 style="text-align:center">The quick questions</h2>
+    <div class="faq">
+      <details open><summary>Is it really free?</summary><p>Yes. We build the breakdown and walk you through it on a short call. There's no charge and no obligation to work with us. You keep the numbers either way.</p></details>
+      <details><summary>How long does it take?</summary><p>A couple of minutes to send us your details, then a 15-minute call where we go through exactly where your clinic is leaking booked consults and what each leak is worth.</p></details>
+      <details><summary>What happens after I send my details?</summary><p>We prepare your breakdown and ring you within one business day to walk through it. No pitch deck, no pressure.</p></details>
+      <details><summary>Do you touch our patient data?</summary><p>No. We look at your enquiry and booking flow, the business side, never patient records or anything clinical. Anything clinical always stays with your team.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section>
+  <div class="wrap">
+    <div class="founder">
+      <div class="badge">A</div>
+      <div>
+        <p>"I built this because clinics don't have a lead problem, they have a leak problem. You're already paying to bring patients in. Before you spend another dollar on ads, let me show you exactly what's slipping out the back, on your own numbers. If there's nothing worth fixing, I'll tell you that too."</p>
+        <p class="sig">Abdullahi · First Business Solutions</p>
+      </div>
+    </div>
+    <div class="cta-center">
+      <a class="btn" href="#audit">Get My Free Leak Audit</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <p class="comply">AHPRA aware · No medical claims · Your patient data is never held hostage</p>
+    <div class="foot-row">
+      <div>© <span id="yr">2026</span> First Business Solutions · Registered Australian business</div>
+      <div>fbs-ai.com · Australian owned &amp; operated</div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://link.msgsndr.com/js/form_embed.js"></script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+</body>
+</html>
