@@ -518,8 +518,23 @@
     $('r-dorm').textContent=fmt(dorm);
     $('r-year').textContent=money(perMonth*12*v.price+dorm*v.price);
     $('r-rec').textContent=money((perMonth*12+dorm)*v.price*v.months);
-    if(touched){try{localStorage.setItem('fbsLeakCalc',JSON.stringify(v))}catch(e){}}
+    if(touched){try{localStorage.setItem('fbsLeakCalc',JSON.stringify(v))}catch(e){}
+      // Pass the figures into the CRM form's hidden fields (query keys = custom field keys), so the closer sees them on the contact.
+      var q={
+        leak_calc_monthly: money(perMonth*v.price)+' a month ('+fmt(perMonth)+' patients)',
+        leak_calc_yearly: money(perMonth*12*v.price+dorm*v.price)+' a year; recurring '+money((perMonth*12+dorm)*v.price*v.months),
+        leak_calc_inputs: fmt(v.enq)+' enquiries/mo, '+v.miss+'% unanswered, '+fmt(v.booked)+' booked/mo, '+v.ns+'% no-show, '+fmt(v.dorm)+' past patients, '+money(v.price)+'/mo fee, '+v.months+' months avg stay'
+      };
+      clearTimeout(srcTimer); srcTimer=setTimeout(function(){ if(formTouched) return;
+        var f=document.getElementById('inline-4Ptsr4cE2FJoQn5ySrIU'); if(!f) return;
+        var base=f.src.split('?')[0], qs=Object.keys(q).map(function(k){return k+'='+encodeURIComponent(q[k])}).join('&');
+        if(f.src!==base+'?'+qs) f.src=base+'?'+qs;
+      },700);
+    }
   }
+  var srcTimer=null, formTouched=false;
+  // once the owner clicks into the form, stop reloading it so nothing they typed is lost
+  window.addEventListener('blur',function(){ if(document.activeElement&&document.activeElement.id==='inline-4Ptsr4cE2FJoQn5ySrIU') formTouched=true; });
   var touched=false;
   ids.forEach(function(k){$(k).addEventListener('input',function(){touched=true;run()})});
   run();
