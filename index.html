@@ -10,7 +10,7 @@
 <meta name="description" content="See exactly where your clinic loses booked consults, and what it's costing you each month. A free line-by-line audit for weight loss, men's and women's health clinic owners." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500;1,6..72,600&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   :root{
     /* fbs-ai.com palette (fbs-site app/globals.css) */
@@ -42,7 +42,7 @@
   /* hero */
   .hero{padding:70px 0 56px}
   .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:52px;align-items:center}
-  .hero h1{font-size:clamp(33px,4.6vw,54px);line-height:1.04;font-weight:500;margin:18px 0 0}
+  .hero h1{font-size:clamp(36px,5.2vw,60px);line-height:1.02;font-weight:600;margin:18px 0 0;letter-spacing:-.02em}
   .hero h1 em{font-style:italic;color:var(--clay)}
   .hero .sub{font-size:clamp(17px,2.1vw,20px);color:var(--ink2);max-width:560px;margin:22px 0 30px}
   .cred{display:flex;flex-wrap:wrap;gap:18px;margin-top:26px;color:var(--muted);font-size:13px;font-weight:500}
@@ -115,6 +115,43 @@
 
   .cta-center{text-align:center;margin-top:40px}
 
+
+  /* qualifier bar */
+  .qbar{background:var(--night);color:var(--night-ink);text-align:center;font-size:13.5px;font-weight:600;padding:10px 16px;letter-spacing:.01em}
+  .qbar b{color:#fff}
+  /* hero trust lines */
+  .heroline{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:14.5px;color:var(--ink2);max-width:560px}
+  .heroline .ic{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--sage-soft);color:var(--sage);display:grid;place-items:center;font-size:12px;font-weight:800;margin-top:1px}
+  .heroline a{color:var(--sage);font-weight:700;border-bottom:2px solid var(--sage-soft)}
+  /* with / without */
+  .vs{width:100%;border-collapse:separate;border-spacing:0;margin-top:30px;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;font-size:15px}
+  .vs th{text-align:left;padding:14px 18px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bone);border-bottom:1px solid var(--line)}
+  .vs th.us{color:#fff;background:var(--sage)}
+  .vs td{padding:15px 18px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink2)}
+  .vs tr:last-child td{border-bottom:none}
+  .vs td:first-child{font-weight:700;color:var(--ink);width:24%}
+  .vs td.us{background:var(--sage-soft);color:var(--ink);font-weight:500}
+  /* not for you */
+  .notfor{margin-top:26px;max-width:760px}
+  .notfor h3{font-size:19px;font-weight:500;margin-bottom:10px}
+  .notfor div{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;color:var(--ink2);margin:8px 0}
+  .cross{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:#f1e9e6;color:#8a3b2a;display:grid;place-items:center;font-size:13px;font-weight:800;margin-top:1px}
+  /* booking right on the page */
+  .bookdirect{max-width:820px;margin:28px auto 0;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+  .bookdirect .bh{text-align:center;padding:26px 22px 4px}
+  .bookdirect .bh h3{font-size:clamp(20px,2.4vw,26px);font-weight:500}
+  .bookdirect .bh p{color:var(--ink2);font-size:15px;margin-top:6px}
+  .bookdirect iframe{min-height:760px}
+  /* sticky mobile CTA */
+  .mstick{display:none}
+  @media(max-width:820px){
+    .mstick{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--line);box-shadow:0 -8px 24px rgba(22,35,46,.08)}
+    .mstick a{flex:1;text-align:center;justify-content:center;padding:13px 10px;font-size:15px}
+    .mstick .ghost{background:var(--sage-soft);color:var(--sage);box-shadow:none}
+    body{padding-bottom:76px}
+    .vs td,.vs th{padding:11px 10px;font-size:13.5px}
+    .bookdirect iframe{min-height:960px}
+  }
   /* results strip */
   .results{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:16px;background:var(--card);overflow:hidden}
   .res{padding:24px 22px;border-right:1px solid var(--line)}
@@ -193,6 +230,7 @@
 </head>
 <body>
 
+<div class="qbar">For clinic owners getting <b>100+ enquiries a month</b> who are losing patients to missed calls, slow follow up and no-shows</div>
 <header>
   <div class="nav">
     <img class="logo" src="logo.jpg" alt="First Business Solutions" />
@@ -204,12 +242,14 @@
 <div class="hero">
   <div class="wrap hero-grid">
     <div>
-      <p class="eyebrow">For weight loss, men's and women's health clinic owners</p>
+      <p class="eyebrow">For clinic owners</p>
       <h1>See exactly where your clinic <em>loses booked consults</em>, and what it's costing you every month.</h1>
       <p class="sub">You already pay to bring the enquiries in. Some slip away to missed calls, slow follow up, no shows, and a past patient list nobody works. We map each one and put a dollar figure on it using your own numbers, free.</p>
       <a class="btn" href="#audit">Get My Free Leak Audit</a>
       <a href="#calculator" style="margin-left:18px;font-weight:700;color:var(--sage);border-bottom:2px solid var(--sage-soft)">Or try the calculator</a>
       <p class="micro">Free. No obligation. We ring you within one business day, and you keep the breakdown either way.</p>
+      <div class="heroline"><span class="ic">✓</span><span><b>Our guarantee:</b> on our Growth plan, if we miss your booked-consult target in the first month, we keep working an extra month at no retainer cost. <a href="#guarantee">How it works</a></span></div>
+      <div class="heroline"><span class="ic">☎</span><span><b>Hear it for yourself:</b> call Ava, our demo AI receptionist, on <a href="tel:+61468066728">0468 066 728</a>. She answers as a sample clinic, Northside Health.</span></div>
       <div class="cred">
         <span><i class="dot"></i> Google Ads Search certified</span>
         <span><i class="dot"></i> Registered Australian business</span>
@@ -366,8 +406,24 @@
       <div class="sp"><div class="k">Under 30 seconds</div><p>Every new enquiry gets a text back, day or night.</p></div>
       <div class="sp"><div class="k">First ring, 24/7</div><p>The AI receptionist answers, handles the everyday questions and books them in. Anything clinical goes to your team.</p></div>
       <div class="sp"><div class="k">Live within a week</div><p>We build and connect it. Your team keeps working as normal.</p></div>
-      <div class="sp"><div class="k">Every month</div><p>A report showing exactly what came back: enquiries, bookings and past patients rebooked.</p></div>
+      <div class="sp"><div class="k">Live dashboard</div><p>See every enquiry and booking any time, plus a report every month showing exactly what came back.</p></div>
     </div>
+  </div>
+</section>
+
+<!-- WITH / WITHOUT -->
+<section>
+  <div class="wrap">
+    <p class="eyebrow">The difference</p>
+    <h2>Your clinic today, and with the system</h2>
+    <table class="vs">
+      <tr><th></th><th>Without it</th><th class="us">With it</th></tr>
+      <tr><td>Missed and after-hours calls</td><td>Ring out or go to voicemail, and the patient rings the next clinic</td><td class="us">Answered on the first ring, 24/7, and booked straight into your calendar</td></tr>
+      <tr><td>New enquiries</td><td>Wait hours, sometimes until the next day, for a reply</td><td class="us">A text back in under 30 seconds, day or night</td></tr>
+      <tr><td>No-shows</td><td>The slot is lost and nobody follows up</td><td class="us">Confirmations and reminders on every booking, and no-shows are followed up and rebooked</td></tr>
+      <tr><td>Past patients</td><td>Sit in a list nobody has time to work</td><td class="us">Worked through and booked back in, with check-ins when they're due</td></tr>
+      <tr><td>Reporting</td><td>No clear picture of what's working</td><td class="us">A live dashboard you can open any time, plus a report every month showing exactly what came back</td></tr>
+    </table>
   </div>
 </section>
 
@@ -390,17 +446,23 @@
     <p class="eyebrow">Who it's for</p>
     <h2>Built for owner-run clinics with real patient flow</h2>
     <div class="icp">
-      <div><span class="tick">✓</span> Weight loss, men's health or women's health (HRT and menopause) clinics</div>
+      <div><span class="tick">✓</span> Private clinics that book consults: weight loss, men's and women's health, hearing, hair, longevity and more</div>
       <div><span class="tick">✓</span> Cash-pay or subscription programmes</div>
       <div><span class="tick">✓</span> Owner or practice manager makes the call</div>
       <div><span class="tick">✓</span> Enough enquiry volume to have real leakage</div>
     </div>
-    <p class="lede" style="margin-top:22px">If you're a solo practitioner with no marketing or patient base yet, this isn't for you, and we'll tell you so.</p>
+    <div class="notfor">
+      <h3>It's not the right fit if you're</h3>
+      <div><span class="cross">✕</span> A solo practitioner with no patient base yet</div>
+      <div><span class="cross">✕</span> A fully bulk-billed GP practice</div>
+      <div><span class="cross">✕</span> Happy with how enquiries are handled now and not looking to change it</div>
+      <p class="lede" style="margin-top:14px;font-size:16px">If that's you, we'll tell you so on the call.</p>
+    </div>
   </div>
 </section>
 
 <!-- GUARANTEE -->
-<section class="band" style="padding-top:52px;padding-bottom:52px">
+<section class="band" id="guarantee" style="padding-top:52px;padding-bottom:52px">
   <div class="wrap">
     <div class="guarantee">
       <p class="eyebrow">Our guarantee</p>
@@ -441,6 +503,10 @@
         title="Clinic Leak Audit">
       </iframe>
     </div>
+    <div class="bookdirect">
+      <div class="bh"><h3>Rather book straight in?</h3><p>Pick a time with our consultant. It's free, on a video call, and you keep the numbers either way.</p></div>
+      <iframe src="https://api.leadconnectorhq.com/widget/booking/vdcNQ2PfFOz7TTyWejdZ" scrolling="no" id="vdcNQ2PfFOz7TTyWejdZ_booking_inline" title="Book your clinic call" loading="lazy"></iframe>
+    </div>
   </div>
 </section>
 
@@ -477,6 +543,8 @@
     </div>
   </div>
 </section>
+
+<div class="mstick"><a class="btn" href="#audit">Get my free audit</a><a class="btn ghost" href="#calculator">Try the calculator</a></div>
 
 <!-- FOOTER -->
 <footer>
