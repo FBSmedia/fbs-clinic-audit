@@ -143,7 +143,16 @@
   .row b{color:#fff;font-weight:700;white-space:nowrap}
   .calc-out .note{color:var(--night-muted);font-size:12.5px;margin-top:16px}
   .calc-out .btn{margin-top:auto;align-self:flex-start}
-  .calc-out .btn-wrap{margin-top:22px}
+  .calc-out .btn-wrap{margin-top:18px}
+  .lockwrap{position:relative;margin-top:22px}
+  .rows.locked{filter:blur(6px);user-select:none;pointer-events:none;opacity:.7;margin-top:0}
+  .unlock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;font-weight:700;font-size:16px;gap:4px;padding:0 18px}
+  .unlock small{font-weight:400;font-size:13px;color:var(--night-ink);max-width:300px}
+  .unlock:hover{color:#c9d8ea}
+  .lock-ic{font-size:22px}
+  .fix{margin-top:20px;background:rgba(47,91,140,.18);border:1px solid #2f5b8c;border-radius:10px;padding:14px 16px}
+  .fix-h{color:#fff;font-weight:700;font-size:15px}
+  .fix p{color:var(--night-ink);font-size:14px;margin-top:4px}
 
   /* testimonials */
   .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
@@ -257,7 +266,7 @@
   <div class="wrap">
     <p class="eyebrow">Rough numbers in 30 seconds</p>
     <h2>What is your clinic leaking each month?</h2>
-    <p class="lede">Move the sliders to roughly match your clinic. This counts only one month's payment per patient, so it's the low end. Your audit works it out properly on your real numbers.</p>
+    <p class="lede">Move the sliders to roughly match your clinic. This counts only one month's payment per patient, so it's the low end. Then book a free call and our consultant will show you how to get it back.</p>
 
     <div class="calc">
       <div class="calc-in">
@@ -284,9 +293,13 @@
           <input type="range" id="dorm" min="0" max="5000" step="100" value="1000" />
           <small>Haven't been back in 6 months or more</small>
         </div>
-        <div class="field" style="margin-bottom:4px">
+        <div class="field">
           <label for="price">Average monthly programme fee <output id="o-price"></output></label>
           <input type="range" id="price" min="100" max="2000" step="25" value="300" />
+        </div>
+        <div class="field" style="margin-bottom:4px">
+          <label for="months">Average months a patient stays <output id="o-months"></output></label>
+          <input type="range" id="months" min="1" max="24" step="1" value="6" />
         </div>
       </div>
 
@@ -294,15 +307,23 @@
         <div class="tag">Your estimate · low end</div>
         <div class="big" id="r-month">$0</div>
         <div class="per">walking out the door every month</div>
-        <div class="rows">
-          <div class="row"><span>Patients lost to missed calls</span><b id="r-missed">0</b></div>
-          <div class="row"><span>Patients lost to slow replies</span><b id="r-slow">0</b></div>
-          <div class="row"><span>No-shows you could win back</span><b id="r-ns">0</b></div>
-          <div class="row"><span>Past patients you could rebook</span><b id="r-dorm">0</b></div>
-          <div class="row"><span>Once-off from your past patient list</span><b id="r-pool">$0</b></div>
+        <div class="lockwrap">
+          <div class="rows locked" aria-hidden="true">
+            <div class="row"><span>Patients lost to missed calls</span><b id="r-missed">0</b></div>
+            <div class="row"><span>Patients lost to slow replies</span><b id="r-slow">0</b></div>
+            <div class="row"><span>No-shows you could win back</span><b id="r-ns">0</b></div>
+            <div class="row"><span>Past patients you could rebook</span><b id="r-dorm">0</b></div>
+            <div class="row"><span>What it adds up to over a year</span><b id="r-year">$0</b></div>
+            <div class="row"><span>Recurring value if they stay on</span><b id="r-rec">$0</b></div>
+          </div>
+          <a class="unlock" href="#audit"><span class="lock-ic">&#128274;</span> Unlock your full breakdown<small>Missed calls, no-shows, past patients, your yearly total and the recurring value</small></a>
         </div>
+        <div class="fix">
+          <div class="fix-h">Every one of these has a fix</div>
+          <p>Missed calls, slow replies, no-shows and quiet past patients can all be won back. Unlock your breakdown, then book a free call and our consultant maps out which fixes suit your clinic and what they would bring back.</p>
+        </div>
+        <div class="btn-wrap"><a class="btn" href="#audit">Unlock my breakdown, free</a></div>
         <p class="note">A rough guide on the numbers you entered, not a promise of results. It counts one month's payment per patient, before anyone renews.</p>
-        <div class="btn-wrap"><a class="btn" href="#audit">Get my real numbers, free</a></div>
       </div>
     </div>
   </div>
@@ -391,10 +412,10 @@
     <div class="formwrap">
       <div class="formhead">
         <p class="eyebrow" style="color:var(--clay)">Free · takes 60 seconds</p>
-        <h2>Get your clinic's leak breakdown</h2>
+        <h2>Unlock your clinic's full leak breakdown</h2>
         <div class="rr">
           <span><i class="dot"></i> Free, no obligation</span>
-          <span><i class="dot"></i> We call within 1 business day</span>
+          <span><i class="dot"></i> Your breakdown shows on the next screen</span>
           <span><i class="dot"></i> Keep the breakdown either way</span>
         </div>
       </div>
@@ -468,11 +489,12 @@
 <script src="https://link.msgsndr.com/js/form_embed.js"></script>
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
 <script>
-// Leak calculator. Rates match leak-calc.mjs defaults; counts one month's fee per patient (the low end).
+// Leak calculator. Rates match leak-calc.mjs defaults; headline counts one month's fee per patient (the low end).
+// Full breakdown is blurred here and shown on /thank-you after the form (values passed via localStorage).
 (function(){
   var RATE={close:.40,slowLost:.15,nsRecover:.50,reactivate:.03};
   var $=function(id){return document.getElementById(id)};
-  var ids=['enq','miss','booked','ns','dorm','price'];
+  var ids=['enq','miss','booked','ns','dorm','price','months'];
   var fmt=function(n){return Math.round(n).toLocaleString('en-AU')};
   var money=function(n){return '$'+fmt(n)};
   function run(){
@@ -483,18 +505,23 @@
     $('o-ns').textContent=v.ns+'%';
     $('o-dorm').textContent=fmt(v.dorm);
     $('o-price').textContent=money(v.price);
+    $('o-months').textContent=v.months+(v.months===1?' month':' months');
     var missed=v.enq*(v.miss/100)*RATE.close;
     var slow=v.enq*(1-v.miss/100)*RATE.slowLost*RATE.close;
     var ns=v.booked*(v.ns/100)*RATE.nsRecover;
     var dorm=v.dorm*RATE.reactivate;
+    var perMonth=missed+slow+ns;
+    $('r-month').textContent=money(perMonth*v.price);
     $('r-missed').textContent=fmt(missed)+' a month';
     $('r-slow').textContent=fmt(slow)+' a month';
     $('r-ns').textContent=fmt(ns)+' a month';
     $('r-dorm').textContent=fmt(dorm);
-    $('r-month').textContent=money((missed+slow+ns)*v.price);
-    $('r-pool').textContent=money(dorm*v.price);
+    $('r-year').textContent=money(perMonth*12*v.price+dorm*v.price);
+    $('r-rec').textContent=money((perMonth*12+dorm)*v.price*v.months);
+    if(touched){try{localStorage.setItem('fbsLeakCalc',JSON.stringify(v))}catch(e){}}
   }
-  ids.forEach(function(k){$(k).addEventListener('input',run)});
+  var touched=false;
+  ids.forEach(function(k){$(k).addEventListener('input',function(){touched=true;run()})});
   run();
 })();
 </script>

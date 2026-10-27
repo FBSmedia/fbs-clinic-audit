@@ -56,6 +56,23 @@
   .cal{width:100%;min-height:720px;border:none;display:block;background:#fff}
   .fineprint{color:var(--muted);font-size:13.5px;text-align:center;max-width:620px;margin:22px auto 0}
 
+
+  /* unlocked leak report (shown only if the owner used the calculator) */
+  .report{display:none;max-width:900px;margin:34px auto 0;background:var(--night);color:var(--night-ink);border-radius:20px;padding:30px 30px 26px}
+  .report .tag{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--night-muted)}
+  .report .big{font-family:'Newsreader',Georgia,serif;font-size:clamp(38px,5vw,54px);color:#fff;line-height:1;margin:10px 0 4px}
+  .report .per{color:var(--night-muted);font-size:14px}
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+  .kpi{border:1px solid var(--night-line);border-radius:12px;padding:14px}
+  .kpi b{display:block;font-family:'Newsreader',Georgia,serif;font-size:26px;color:#fff;font-weight:500}
+  .kpi span{font-size:13px;color:var(--night-muted)}
+  .rrows{margin-top:18px;border-top:1px solid var(--night-line)}
+  .rrow{display:grid;grid-template-columns:1fr auto;gap:6px 14px;padding:12px 0;border-bottom:1px solid var(--night-line);font-size:14.5px}
+  .rrow b{color:#fff;white-space:nowrap}
+  .rrow small{grid-column:1 / -1;color:var(--night-muted);font-size:13px}
+  .rrow small strong{color:#c9d8ea;font-weight:600}
+  .report .note{color:var(--night-muted);font-size:12.5px;margin-top:14px}
+  @media(max-width:820px){.kpis{grid-template-columns:1fr}}
   footer{background:var(--night);color:var(--night-muted);padding:40px 0;font-size:13px;margin-top:10px}
   .comply{text-align:center;letter-spacing:.14em;text-transform:uppercase;font-size:11px;font-weight:500;color:var(--night-muted)}
   .foot-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:20px}
@@ -80,8 +97,31 @@
   <div class="wrap">
     <div class="seal">✓</div>
     <p class="eyebrow">We've got your details</p>
-    <h1>Your leak breakdown is <em>on its way</em>.</h1>
-    <p class="sub">We're pulling your numbers together now. One of our team will call you within one business day to walk you through exactly where your clinic is leaking booked consults, and what each leak is worth.</p>
+    <h1 id="hero-h1">Your leak breakdown is <em>on its way</em>.</h1>
+    <p class="sub" id="hero-sub">We're pulling your numbers together now. One of our team will call you within one business day to walk you through exactly where your clinic is leaking booked consults, and what each leak is worth.</p>
+  </div>
+</div>
+
+
+<!-- UNLOCKED LEAK REPORT -->
+<div class="wrap">
+  <div class="report" id="report">
+    <div class="tag">Your leak breakdown · on the numbers you entered</div>
+    <div class="big" id="t-month">$0</div>
+    <div class="per">walking out the door every month, counting just one month's fee per patient</div>
+    <div class="kpis">
+      <div class="kpi"><b id="t-pm">0</b><span>patients a month you could be booking</span></div>
+      <div class="kpi"><b id="t-year">$0</b><span>over a year, including your past patient list</span></div>
+      <div class="kpi"><b id="t-rec">$0</b><span id="t-rec-l">recurring value if they stay their usual months</span></div>
+    </div>
+    <div class="rrows">
+      <div class="rrow"><span>Missed calls</span><b id="t-missed">0</b><small><strong>How we capture it:</strong> the AI receptionist answers on the first ring, 24/7, and books them straight into your calendar.</small></div>
+      <div class="rrow"><span>Slow replies</span><b id="t-slow">0</b><small><strong>How we capture it:</strong> every new enquiry gets a text back in under 30 seconds, day or night, before they ring the next clinic.</small></div>
+      <div class="rrow"><span>No-shows</span><b id="t-ns">0</b><small><strong>How we capture it:</strong> confirmations and reminders on every booking, and anyone who doesn't show is followed up and rebooked automatically.</small></div>
+      <div class="rrow"><span>Past patients gone quiet</span><b id="t-dorm">0</b><small><strong>How we capture it:</strong> we work through your old patient list and book them back in, worth <span id="t-pool">$0</span> once-off.</small></div>
+      <div class="rrow"><span>New patients from ads</span><b>On the call</b><small><strong>How we add to it:</strong> we can run your Meta ads as well, so every new enquiry they bring in lands in the same system and gets answered in under 30 seconds. Your consultant shows you what that could add for your clinic.</small></div>
+    </div>
+    <p class="note">A rough guide on the numbers you entered, not a promise of results. Your consultant checks it against your real data on the call.</p>
   </div>
 </div>
 
@@ -100,7 +140,7 @@
     <div class="bookwrap">
       <div class="bookhead">
         <p class="eyebrow" style="color:var(--clay)">Skip the wait</p>
-        <h2>Pick a time that suits you</h2>
+        <h2 id="book-h">Pick a time that suits you</h2>
         <p>Rather than wait for our call, grab a slot (up to 45 minutes) now and we'll walk you through your breakdown live.</p>
       </div>
       <iframe class="cal"
@@ -126,6 +166,31 @@
 </footer>
 
 <script src="https://link.msgsndr.com/js/form_embed.js"></script>
+<script>
+(function(){
+  var v;try{v=JSON.parse(localStorage.getItem('fbsLeakCalc')||'null')}catch(e){v=null}
+  if(!v||!v.price) return;
+  var R={close:.40,slowLost:.15,nsRecover:.50,reactivate:.03};
+  var fmt=function(n){return Math.round(n).toLocaleString('en-AU')}, money=function(n){return '$'+fmt(n)};
+  var $=function(id){return document.getElementById(id)};
+  var missed=v.enq*(v.miss/100)*R.close, slow=v.enq*(1-v.miss/100)*R.slowLost*R.close;
+  var ns=v.booked*(v.ns/100)*R.nsRecover, dorm=v.dorm*R.reactivate, pm=missed+slow+ns, months=v.months||6;
+  $('t-month').textContent=money(pm*v.price);
+  $('t-pm').textContent=fmt(pm);
+  $('t-year').textContent=money(pm*12*v.price+dorm*v.price);
+  $('t-rec').textContent=money((pm*12+dorm)*v.price*months);
+  $('t-rec-l').textContent='recurring value over a year of patients, if they stay '+months+(months===1?' month':' months');
+  $('t-missed').textContent=fmt(missed)+' a month';
+  $('t-slow').textContent=fmt(slow)+' a month';
+  $('t-ns').textContent=fmt(ns)+' a month';
+  $('t-dorm').textContent=fmt(dorm)+' patients';
+  $('t-pool').textContent=money(dorm*v.price);
+  $('report').style.display='block';
+  $('hero-h1').innerHTML='Here\'s your <em>leak breakdown</em>.';
+  $('hero-sub').textContent='This is what your clinic is leaking on the numbers you entered. Book a free call below and our consultant will show you exactly how to get it back.';
+  $('book-h').textContent='Book your free call to get it back';
+})();
+</script>
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
 </body>
 </html>
