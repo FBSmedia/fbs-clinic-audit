@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en-AU" data-variant="ungated">
+<head>
+<meta charset="UTF-8" />
+<script>if(/workers\.dev$/.test(location.hostname))location.replace("https://audit.fbs-ai.com"+location.pathname+location.search+location.hash);</script>
+
+<link rel="canonical" href="https://audit.fbs-ai.com/" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="fbs-variant" content="ungated" />
+<script>window.FBS_VARIANT="ungated";</script>
+<title>Clinic Leak Audit — First Business Solutions</title>
+<meta name="description" content="See exactly where your clinic loses booked consults, and what it's costing you each month. A free line-by-line audit for weight loss, men's and women's health clinic owners." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500;1,6..72,600&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    /* fbs-ai.com palette (fbs-site app/globals.css) */
+    --bone:#f6f4ef; --paper:#ffffff; --card:#ffffff;
+    --ink:#161c25; --ink2:#353d49; --muted:#5f6874;
+    --line:#e1ddd3; --line2:#cbc6ba;
+    --sage:#2f5b8c; --sage-soft:#e5ecf4;
+    --clay:#2f5b8c; --clay-dk:#244872; --clay-soft:#e5ecf4;
+    --night:#121822; --night-ink:#e9ece9; --night-muted:#a4adb8; --night-line:#2a3340;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Instrument Sans',system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bone);color:var(--ink);line-height:1.62;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  h1,h2,h3,.serif{font-family:'Newsreader',Georgia,serif;letter-spacing:-.01em}
+  a{color:inherit;text-decoration:none}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--sage)}
+
+  .btn{display:inline-flex;align-items:center;gap:9px;background:var(--clay);color:#fff;font-weight:700;font-size:17px;padding:17px 30px;border-radius:10px;box-shadow:0 10px 26px rgba(47,91,140,.28);transition:background .2s,transform .2s;border:none;cursor:pointer}
+  .btn:hover{background:var(--clay-dk);transform:translateY(-1px)}
+  .btn.sm{padding:11px 20px;font-size:14px}
+  .micro{color:var(--muted);font-size:13.5px;margin-top:12px}
+
+  /* header */
+  header{background:var(--paper);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:1120px;margin:0 auto}
+  .logo{height:68px;width:auto;mix-blend-mode:multiply}
+
+  /* hero */
+  .hero{padding:70px 0 56px}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:52px;align-items:center}
+  .hero h1{font-size:clamp(36px,5.2vw,60px);line-height:1.02;font-weight:600;margin:18px 0 0;letter-spacing:-.02em}
+  .hero h1 em{font-style:italic;color:var(--clay)}
+  .hero .sub{font-size:clamp(17px,2.1vw,20px);color:var(--ink2);max-width:560px;margin:22px 0 30px}
+  .cred{display:flex;flex-wrap:wrap;gap:18px;margin-top:26px;color:var(--muted);font-size:13px;font-weight:500}
+  .cred span{display:flex;align-items:center;gap:7px}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--sage)}
+
+  /* leak snapshot card (bespoke data-viz, replaces stock photo) */
+  .snap{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px;box-shadow:0 24px 60px -30px rgba(22,35,46,.35)}
+  .snap .tag{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .snap h4{font-family:'Instrument Sans';font-size:15px;font-weight:700;margin:2px 0 18px}
+  .bar{display:flex;align-items:center;gap:12px;margin:9px 0}
+  .bar .lbl{width:112px;font-size:12.5px;color:var(--ink2);flex:0 0 auto}
+  .bar .track{flex:1;height:26px;background:var(--bone);border-radius:6px;overflow:hidden}
+  .bar .fill{height:100%;background:linear-gradient(90deg,#4a5361,#6b7480);display:flex;align-items:center;padding-left:10px;color:#fff;font-size:12px;font-weight:700}
+  .bar .fill.warn{background:linear-gradient(90deg,var(--clay),#3d72a8)}
+  .snap .total{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line2);display:flex;justify-content:space-between;align-items:baseline}
+  .snap .total b{font-family:'Newsreader';font-size:27px;font-weight:500;color:var(--clay)}
+  .snap .total span{font-size:12.5px;color:var(--muted)}
+
+  /* sections */
+  section{padding:64px 0}
+  .band{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  h2{font-size:clamp(26px,3.4vw,38px);font-weight:500;line-height:1.1}
+  .lede{color:var(--ink2);font-size:18px;max-width:620px;margin-top:14px}
+
+  /* itemised audit scope — numbered vertical list (not a card grid) */
+  .scope{margin-top:40px;border-top:1px solid var(--line)}
+  .item{display:grid;grid-template-columns:56px 1fr;gap:22px;padding:26px 0;border-bottom:1px solid var(--line);align-items:start}
+  .item .num{font-family:'Newsreader';font-size:30px;font-weight:500;color:var(--clay);line-height:1}
+  .item h3{font-size:20px;font-weight:500;margin-bottom:5px}
+  .item p{color:var(--ink2);font-size:15.5px;max-width:640px}
+
+  /* who it's for */
+  .icp{display:grid;grid-template-columns:1fr 1fr;gap:14px 40px;margin-top:26px;max-width:760px}
+  .icp div{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;color:var(--ink2)}
+  .tick{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--sage-soft);color:var(--sage);display:grid;place-items:center;font-size:13px;font-weight:800;margin-top:1px}
+
+  /* guarantee */
+  .guarantee{background:var(--night);color:var(--night-ink);border-radius:18px;padding:44px 34px;text-align:center}
+  .guarantee .eyebrow{color:#9db8d6}
+  .guarantee p{font-family:'Newsreader';font-size:clamp(21px,2.7vw,29px);font-weight:500;max-width:780px;margin:14px auto 0;line-height:1.32}
+
+  /* form */
+  .formwrap{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 40px 90px -50px rgba(22,35,46,.5);max-width:820px;margin:0 auto}
+  .formhead{text-align:center;padding:38px 26px 6px}
+  .formhead h2{font-size:clamp(24px,3vw,32px)}
+  .formhead .rr{display:inline-flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:16px;color:var(--sage);font-size:13.5px;font-weight:700}
+  .formhead .rr span{display:flex;align-items:center;gap:6px}
+  iframe{display:block;width:100%;min-height:900px;border:none;background:#fff}
+
+  /* faq */
+  .faq{max-width:780px;margin:32px auto 0}
+  details{border-bottom:1px solid var(--line);padding:20px 4px}
+  summary{font-family:'Newsreader';font-size:19px;font-weight:500;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:'+';color:var(--clay);font-size:24px;font-weight:400}
+  details[open] summary::after{content:'–'}
+  details p{color:var(--ink2);font-size:15.5px;margin-top:12px;max-width:680px}
+
+  /* founder */
+  .founder{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:30px 32px;max-width:820px;margin:0 auto;display:flex;gap:22px;align-items:flex-start}
+  .founder .badge{flex:0 0 auto;width:52px;height:52px;border-radius:50%;background:var(--night);color:var(--paper);display:grid;place-items:center;font-family:'Instrument Sans';font-size:14px;font-weight:700;letter-spacing:.04em}
+  .founder p{color:var(--ink2);font-size:15.5px}
+  .founder .sig{font-family:'Newsreader';color:var(--ink);font-weight:500;margin-top:10px}
+
+  /* footer */
+  footer{background:var(--night);color:var(--night-muted);padding:40px 0;font-size:13px}
+  .comply{text-align:center;letter-spacing:.14em;text-transform:uppercase;font-size:11px;font-weight:500;color:var(--night-muted)}
+  .foot-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:20px}
+
+  .cta-center{text-align:center;margin-top:40px}
+
+
+  /* qualifier bar */
+  .qbar{background:var(--night);color:var(--night-ink);text-align:center;font-size:13.5px;font-weight:600;padding:10px 16px;letter-spacing:.01em}
+  .qbar b{color:#fff}
+  /* hero trust lines */
+  .heroline{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:14.5px;color:var(--ink2);max-width:560px}
+  .heroline .ic{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--sage-soft);color:var(--sage);display:grid;place-items:center;font-size:12px;font-weight:800;margin-top:1px}
+  .heroline a{color:var(--sage);font-weight:700;border-bottom:2px solid var(--sage-soft)}
+  /* with / without */
+  .vs{width:100%;border-collapse:separate;border-spacing:0;margin-top:30px;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;font-size:15px}
+  .vs th{text-align:left;padding:14px 18px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bone);border-bottom:1px solid var(--line)}
+  .vs th.us{color:#fff;background:var(--sage)}
+  .vs td{padding:15px 18px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink2)}
+  .vs tr:last-child td{border-bottom:none}
+  .vs td:first-child{font-weight:700;color:var(--ink);width:24%}
+  .vs td.us{background:var(--sage-soft);color:var(--ink);font-weight:500}
+  /* not for you */
+  .notfor{margin-top:26px;max-width:760px}
+  .notfor h3{font-size:19px;font-weight:500;margin-bottom:10px}
+  .notfor div{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;color:var(--ink2);margin:8px 0}
+  .cross{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:#f1e9e6;color:#8a3b2a;display:grid;place-items:center;font-size:13px;font-weight:800;margin-top:1px}
+  /* booking right on the page */
+  .bookdirect{max-width:820px;margin:28px auto 0;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+  .bookdirect .bh{text-align:center;padding:26px 22px 4px}
+  .bookdirect .bh h3{font-size:clamp(20px,2.4vw,26px);font-weight:500}
+  .bookdirect .bh p{color:var(--ink2);font-size:15px;margin-top:6px}
+  .bookdirect iframe{min-height:760px}
+  /* sticky mobile CTA */
+  .mstick{display:none}
+  @media(max-width:820px){
+    .mstick{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--line);box-shadow:0 -8px 24px rgba(22,35,46,.08)}
+    .mstick a{flex:1;text-align:center;justify-content:center;padding:13px 10px;font-size:15px}
+    .mstick .ghost{background:var(--sage-soft);color:var(--sage);box-shadow:none}
+    body{padding-bottom:76px}
+    .vs td,.vs th{padding:11px 10px;font-size:13.5px}
+    .bookdirect iframe{min-height:960px}
+  }
+  /* results strip */
+  .results{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:16px;background:var(--card);overflow:hidden}
+  .res{padding:24px 22px;border-right:1px solid var(--line)}
+  .res:last-child{border-right:none}
+  .res b{display:block;font-family:'Newsreader';font-size:clamp(28px,3.2vw,38px);font-weight:500;color:var(--clay);line-height:1.05}
+  .res span{display:block;color:var(--ink2);font-size:14px;margin-top:8px}
+  .fine{color:var(--muted);font-size:12.5px;margin-top:12px}
+
+  /* speed strip */
+  .speed{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px}
+  .sp{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .sp .k{font-family:'Newsreader';font-size:24px;font-weight:500;color:var(--sage);line-height:1.1}
+  .sp p{color:var(--ink2);font-size:14.5px;margin-top:8px}
+
+  /* calculator */
+  .calc{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:34px;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 30px 70px -45px rgba(22,35,46,.45)}
+  .calc-in{padding:28px 28px 22px}
+  .field{margin-bottom:18px}
+  .field label{display:flex;justify-content:space-between;font-size:14px;font-weight:500;color:var(--ink)}
+  .field label output{font-family:'Newsreader';font-weight:500;color:var(--clay);font-size:16px}
+  .field input[type=range]{width:100%;margin-top:8px;accent-color:var(--clay)}
+  .field small{color:var(--muted);font-size:12.5px}
+  .calc-out{background:var(--night);color:var(--night-ink);padding:28px;display:flex;flex-direction:column}
+  .calc-out .tag{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--night-muted)}
+  .calc-out .big{font-family:'Newsreader';font-size:clamp(38px,5vw,56px);font-weight:500;color:#fff;line-height:1;margin:10px 0 4px}
+  .calc-out .per{color:var(--night-muted);font-size:14px}
+  .rows{margin-top:22px;border-top:1px solid var(--night-line)}
+  .row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--night-line);font-size:14.5px}
+  .row b{color:#fff;font-weight:700;white-space:nowrap}
+  .calc-out .note{color:var(--night-muted);font-size:12.5px;margin-top:16px}
+  .calc-out .btn{margin-top:auto;align-self:flex-start}
+  .calc-out .btn-wrap{margin-top:18px}
+  .lockwrap{position:relative;margin-top:22px}
+  .rows.locked{filter:blur(6px);user-select:none;pointer-events:none;opacity:.7;margin-top:0}
+  .unlock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;font-weight:700;font-size:16px;gap:4px;padding:0 18px}
+  .unlock small{font-weight:400;font-size:13px;color:var(--night-ink);max-width:300px}
+  .unlock:hover{color:#c9d8ea}
+  .lock-ic{font-size:22px}
+  .fix{margin-top:20px;background:rgba(47,91,140,.18);border:1px solid #2f5b8c;border-radius:10px;padding:14px 16px}
+  .fix-h{color:#fff;font-weight:700;font-size:15px}
+  .fix p{color:var(--night-ink);font-size:14px;margin-top:4px}
+  /* ungated variant: breakdown shown in full, two CTAs */
+  .rows.open{margin-top:22px}
+  .calc-out .btn-wrap.duo{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
+  .calc-out .btn-wrap.duo .btn{margin-top:0}
+  .calc-out .alt{color:#c9d8ea;font-weight:700;font-size:15px;border-bottom:2px solid rgba(201,216,234,.35)}
+  .calc-out .alt:hover{color:#fff}
+
+  /* testimonials */
+  .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 24px;display:flex;flex-direction:column}
+  .q .stat{font-family:'Newsreader';font-size:22px;font-weight:500;color:var(--clay);line-height:1.15}
+  .q blockquote{color:var(--ink2);font-size:15px;margin:14px 0 18px;flex:1}
+  .q .who{border-top:1px solid var(--line);padding-top:14px;font-size:14px}
+  .q .who b{display:block;color:var(--ink)}
+  .q .who span{color:var(--muted)}
+
+  /* how it works */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+  .step{border-top:2px solid var(--clay);padding-top:16px}
+  .step .n{font-family:'Newsreader';font-size:26px;font-weight:500;color:var(--clay);line-height:1}
+  .step h3{font-size:18px;font-weight:500;margin:10px 0 6px}
+  .step p{color:var(--ink2);font-size:15px}
+
+  @media(max-width:820px){
+    .hero-grid{grid-template-columns:1fr;gap:36px}
+    .icp{grid-template-columns:1fr}
+    iframe{min-height:1050px}
+    .results{grid-template-columns:1fr 1fr}
+    .res:nth-child(2){border-right:none}
+    .res:nth-child(-n+2){border-bottom:1px solid var(--line)}
+    .speed{grid-template-columns:1fr 1fr}
+    .calc{grid-template-columns:1fr}
+    .quotes,.steps{grid-template-columns:1fr}
+  }
+  @media(max-width:480px){
+    .wrap,.nav{padding-left:16px;padding-right:16px}
+    .logo{height:52px}
+    .speed{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="qbar">For clinic owners getting <b>100+ enquiries a month</b> who are losing patients to missed calls, slow follow up and no-shows</div>
+<header>
+  <div class="nav">
+    <img class="logo" src="logo.jpg" alt="First Business Solutions" />
+    <a class="btn sm" href="#audit">Get My Free Leak Audit</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">For clinic owners</p>
+      <h1>See exactly where your clinic <em>loses booked consults</em>, and what it's costing you every month.</h1>
+      <p class="sub">You already pay to bring the enquiries in. Some slip away to missed calls, slow follow up, no shows, and a past patient list nobody works. We map each one and put a dollar figure on it using your own numbers, free.</p>
+      <a class="btn" href="#audit">Get My Free Leak Audit</a>
+      <a href="#calculator" style="margin-left:18px;font-weight:700;color:var(--sage);border-bottom:2px solid var(--sage-soft)">Or try the calculator</a>
+      <p class="micro">Free. No obligation. We ring you within one business day, and you keep the breakdown either way.</p>
+      <div class="heroline"><span class="ic">✓</span><span><b>Our guarantee:</b> on our Growth plan, if we miss your booked-consult target in the first four weeks, we keep working another four weeks at no retainer cost. <a href="#guarantee">How it works</a></span></div>
+      <div class="heroline"><span class="ic">☎</span><span><b>Hear it for yourself:</b> call Ava, our demo AI receptionist, on <a href="tel:+61468066728">0468 066 728</a>. She answers as a sample clinic, Northside Health.</span></div>
+      <div class="cred">
+        <span><i class="dot"></i> Google Ads Search certified</span>
+        <span><i class="dot"></i> Registered Australian business</span>
+        <span><i class="dot"></i> We never touch your patient data</span>
+      </div>
+    </div>
+
+    <!-- bespoke leak data-viz, not a stock photo -->
+    <div class="snap">
+      <div class="tag">Example · a typical clinic</div>
+      <h4>Where the booked consults go</h4>
+      <div class="bar"><div class="lbl">Enquiries in</div><div class="track"><div class="fill" style="width:100%">200 / month</div></div></div>
+      <div class="bar"><div class="lbl">Actually answered</div><div class="track"><div class="fill" style="width:70%">140</div></div></div>
+      <div class="bar"><div class="lbl">Turned up</div><div class="track"><div class="fill" style="width:52%">104</div></div></div>
+      <div class="bar"><div class="lbl">Leaking away</div><div class="track"><div class="fill warn" style="width:48%">96 lost</div></div></div>
+      <div class="total"><span>What it's worth to your clinic, on your own numbers</span><b style="white-space:nowrap">Your figure</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS STRIP -->
+<section style="padding-top:8px;padding-bottom:56px">
+  <div class="wrap">
+    <div class="results">
+      <div class="res"><b>63 of 80</b><span>genuine enquiries booked, from 212 after-hours calls the AI receptionist picked up in month one</span></div>
+      <div class="res"><b>96 consults</b><span>booked from a weight loss clinic's old patient list in the first month</span></div>
+      <div class="res"><b>27% → 6%</b><span>no-show rate at a men's health clinic, in six weeks</span></div>
+      <div class="res"><b>15 hrs a week</b><span>given back to a women's health clinic's front desk</span></div>
+    </div>
+    <p class="fine">Results from individual clinics we work with. Yours will depend on your enquiry volume and patient list.</p>
+  </div>
+</section>
+
+<!-- WHAT THE AUDIT SHOWS (itemised scope = trust substitute) -->
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow">What we show you</p>
+    <h2>A line-by-line breakdown of the consults you paid for and never booked</h2>
+    <p class="lede">No vague "you could do better." We inspect the five places every clinic leaks, put a real dollar figure on each, and hand you the numbers, whether you work with us or not.</p>
+
+    <div class="scope">
+      <div class="item"><div class="num">01</div><div><h3>Missed &amp; after-hours enquiries</h3><p>How many calls ring out when the front desk is busy or after close. At a cash-pay clinic, that patient simply rings the next clinic on Google.</p></div></div>
+      <div class="item"><div class="num">02</div><div><h3>Speed to lead</h3><p>How fast enquiries get a reply, and how many book with a faster competitor while yours sits in a queue.</p></div></div>
+      <div class="item"><div class="num">03</div><div><h3>No-shows</h3><p>The booked consults that never turn up, and how many are recoverable with the right reminder and recovery flow.</p></div></div>
+      <div class="item"><div class="num">04</div><div><h3>Dormant patients</h3><p>The past patients gone quiet in your database. Pure found money sitting in a list nobody is working.</p></div></div>
+      <div class="item"><div class="num">05</div><div><h3>Review velocity</h3><p>Whether thin or stale reviews are quietly suppressing conversion on every enquiry you already pay to generate.</p></div></div>
+    </div>
+
+    <div class="cta-center">
+      <a class="btn" href="#audit">Show Me My Lost Consults</a>
+    </div>
+  </div>
+</section>
+
+<!-- LEAK CALCULATOR -->
+<section id="calculator">
+  <div class="wrap">
+    <p class="eyebrow">Rough numbers in 30 seconds</p>
+    <h2>What is your clinic leaking each month?</h2>
+    <p class="lede">Move the sliders to roughly match your clinic. This counts only one month's payment per patient, so it's the low end. Then book a free call and our consultant will show you how to get it back.</p>
+
+    <div class="calc">
+      <div class="calc-in">
+        <div class="field">
+          <label for="enq">New patient enquiries a month <output id="o-enq"></output></label>
+          <input type="range" id="enq" min="20" max="800" step="10" value="200" />
+          <small>Calls, web forms and DMs combined</small>
+        </div>
+        <div class="field">
+          <label for="miss">Calls that go unanswered <output id="o-miss"></output></label>
+          <input type="range" id="miss" min="0" max="60" step="5" value="30" />
+          <small>After hours, or when the desk is with a patient</small>
+        </div>
+        <div class="field">
+          <label for="booked">Consults booked a month <output id="o-booked"></output></label>
+          <input type="range" id="booked" min="10" max="400" step="5" value="80" />
+        </div>
+        <div class="field">
+          <label for="ns">No-show rate <output id="o-ns"></output></label>
+          <input type="range" id="ns" min="0" max="40" step="1" value="20" />
+        </div>
+        <div class="field">
+          <label for="dorm">Past patients gone quiet <output id="o-dorm"></output></label>
+          <input type="range" id="dorm" min="0" max="5000" step="100" value="1000" />
+          <small>Haven't been back in 6 months or more</small>
+        </div>
+        <div class="field">
+          <label for="price">Average monthly programme fee <output id="o-price"></output></label>
+          <input type="range" id="price" min="100" max="2000" step="25" value="300" />
+        </div>
+        <div class="field" style="margin-bottom:4px">
+          <label for="months">Average months a patient stays <output id="o-months"></output></label>
+          <input type="range" id="months" min="1" max="24" step="1" value="6" />
+        </div>
+      </div>
+
+      <div class="calc-out" aria-live="polite">
+        <div class="tag">Your estimate · low end</div>
+        <div class="big" id="r-month">$0</div>
+        <div class="per">walking out the door every month</div>
+        <div class="rows open" data-variant="ungated">
+            <div class="row"><span>Patients lost to missed calls</span><b id="r-missed">0</b></div>
+            <div class="row"><span>Patients lost to slow replies</span><b id="r-slow">0</b></div>
+            <div class="row"><span>No-shows you could win back</span><b id="r-ns">0</b></div>
+            <div class="row"><span>Past patients you could rebook</span><b id="r-dorm">0</b></div>
+            <div class="row"><span>What it adds up to over a year</span><b id="r-year">$0</b></div>
+            <div class="row"><span>Recurring value if they stay on</span><b id="r-rec">$0</b></div>
+        </div>
+        <div class="fix">
+          <div class="fix-h">Every one of these has a fix</div>
+          <p>Missed calls, slow replies, no-shows and quiet past patients can all be won back. Book a free call and our consultant maps out which fixes suit your clinic and what they would bring back.</p>
+        </div>
+        <div class="btn-wrap duo"><a class="btn" href="#book" data-cta="calc-book">Book a free 30-minute call</a><a class="alt" href="#audit" data-cta="calc-written">Get the written audit</a></div>
+        <p class="note">A rough guide on the numbers you entered, not a promise of results. It counts one month's payment per patient, before anyone renews.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow">From clinic owners we work with</p>
+    <h2>Same leaks, fixed</h2>
+    <div class="quotes">
+      <div class="q">
+        <div class="stat">96 consults from an old patient list in one month</div>
+        <blockquote>"Enquiries that came in at night sat there until morning, and by then half of them had booked somewhere else. Now every enquiry gets a text back in under 30 seconds, and the AI receptionist answers the phone after hours and on weekends and books people straight into our calendar. In the first month they booked 96 consults from our old list of 2,400 patients, people we'd already paid to get once and lost."</blockquote>
+        <div class="who"><b>Dr Wei Chen</b><span>Medical Director · Weight loss clinic, Sydney NSW</span></div>
+      </div>
+      <div class="q">
+        <div class="stat">No-shows from 27% to 6% in six weeks</div>
+        <blockquote>"Getting enquiries wasn't our problem. Getting blokes to turn up was. Now every booking gets a confirmation and reminders, and if someone doesn't show, the system follows up and rebooks him without reception chasing anyone. Our no-show rate went from 27% to 6% in six weeks. Every month I get a report showing exactly what came back. It's the first thing I open."</blockquote>
+        <div class="who"><b>Lachlan Whitford</b><span>Practice Owner · Men's health clinic</span></div>
+      </div>
+      <div class="q">
+        <div class="stat">88 new consults in the first month</div>
+        <blockquote>"If the front desk was with a patient, the phone just rang out. We were missing about 1 in 3 calls. Now the AI receptionist picks up on the first ring, every time. Anything clinical comes straight to us, which was non-negotiable for me. My front desk has got 15 hours a week back, and we booked 88 new consults in the first month, nearly double our usual."</blockquote>
+        <div class="who"><b>Kate Morrison</b><span>Clinic Director · Women's health clinic</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPEED STRIP -->
+<section>
+  <div class="wrap">
+    <p class="eyebrow">What changes once you're live</p>
+    <h2>Every enquiry answered, fast</h2>
+    <div class="speed">
+      <div class="sp"><div class="k">Under 30 seconds</div><p>Every new enquiry gets a text back, day or night.</p></div>
+      <div class="sp"><div class="k">First ring, 24/7</div><p>The AI receptionist answers, handles the everyday questions and books them in. Anything clinical goes to your team.</p></div>
+      <div class="sp"><div class="k">Live within a week</div><p>We build and connect it. Your team keeps working as normal.</p></div>
+      <div class="sp"><div class="k">Live dashboard</div><p>See every enquiry and booking any time, plus a report every month showing exactly what came back.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- WITH / WITHOUT -->
+<section>
+  <div class="wrap">
+    <p class="eyebrow">The difference</p>
+    <h2>Your clinic today, and with the system</h2>
+    <table class="vs">
+      <tr><th></th><th>Without it</th><th class="us">With it</th></tr>
+      <tr><td>Missed and after-hours calls</td><td>Ring out or go to voicemail, and the patient rings the next clinic</td><td class="us">Answered on the first ring, 24/7, and booked straight into your calendar</td></tr>
+      <tr><td>New enquiries</td><td>Wait hours, sometimes until the next day, for a reply</td><td class="us">A text back in under 30 seconds, day or night</td></tr>
+      <tr><td>No-shows</td><td>The slot is lost and nobody follows up</td><td class="us">Confirmations and reminders on every booking, and no-shows are followed up and rebooked</td></tr>
+      <tr><td>Past patients</td><td>Sit in a list nobody has time to work</td><td class="us">Worked through and booked back in, with check-ins when they're due</td></tr>
+      <tr><td>Reporting</td><td>No clear picture of what's working</td><td class="us">A live dashboard you can open any time, plus a report every month showing exactly what came back</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow">How the audit works</p>
+    <h2>Three steps, nothing to prepare</h2>
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h3>Send your details</h3><p>A few quick fields below. Takes a minute.</p></div>
+      <div class="step"><div class="n">02</div><h3>We pull your numbers</h3><p>We look at how enquiries reach your clinic and where they slip, then put a dollar figure on each leak.</p></div>
+      <div class="step"><div class="n">03</div><h3>Walk through it with our consultant</h3><p>A video call of up to 45 minutes. You keep the breakdown whether you work with us or not.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Who it's for</p>
+    <h2>Built for owner-run clinics with real patient flow</h2>
+    <div class="icp">
+      <div><span class="tick">✓</span> Private clinics that book consults: weight loss, men's and women's health, hearing, hair, longevity and more</div>
+      <div><span class="tick">✓</span> Cash-pay or subscription programmes</div>
+      <div><span class="tick">✓</span> Owner or practice manager makes the call</div>
+      <div><span class="tick">✓</span> Enough enquiry volume to have real leakage</div>
+    </div>
+    <div class="notfor">
+      <h3>It's not the right fit if you're</h3>
+      <div><span class="cross">✕</span> A solo practitioner with no patient base yet</div>
+      <div><span class="cross">✕</span> A fully bulk-billed GP practice</div>
+      <div><span class="cross">✕</span> Happy with how enquiries are handled now and not looking to change it</div>
+      <p class="lede" style="margin-top:14px;font-size:16px">If that's you, we'll tell you so on the call.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GUARANTEE -->
+<section class="band" id="guarantee" style="padding-top:52px;padding-bottom:52px">
+  <div class="wrap">
+    <div class="guarantee">
+      <p class="eyebrow">Our guarantee</p>
+      <p>On our Growth plan, we set a target of booked consults from your existing patient list, on your own numbers. If we miss it in your first four weeks, we keep working for another four weeks at no retainer cost. It's a guarantee on booked consults, not on revenue or patient outcomes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FORM -->
+<section id="audit">
+  <div class="wrap">
+    <div class="formwrap">
+      <div class="formhead">
+        <p class="eyebrow" style="color:var(--clay)">Free · takes 60 seconds</p>
+        <h2>Unlock your clinic's full leak breakdown</h2>
+        <div class="rr">
+          <span><i class="dot"></i> Free, no obligation</span>
+          <span><i class="dot"></i> Your breakdown shows on the next screen</span>
+          <span><i class="dot"></i> Keep the breakdown either way</span>
+        </div>
+      </div>
+      <iframe
+        src="https://api.leadconnectorhq.com/widget/form/4Ptsr4cE2FJoQn5ySrIU"
+        id="inline-4Ptsr4cE2FJoQn5ySrIU"
+        data-layout="{'id':'INLINE'}"
+        data-trigger-type="alwaysShow"
+        data-trigger-value=""
+        data-activation-type="alwaysActivated"
+        data-activation-value=""
+        data-deactivation-type="neverDeactivate"
+        data-deactivation-value=""
+        data-form-name="Clinic Leak Audit"
+        data-height="900"
+        data-layout-iframe-id="inline-4Ptsr4cE2FJoQn5ySrIU"
+        data-form-id="4Ptsr4cE2FJoQn5ySrIU"
+        data-cookie-consent="true"
+        data-cookie-consent-provider="auto"
+        title="Clinic Leak Audit">
+      </iframe>
+    </div>
+    <div class="bookdirect" id="book">
+      <div class="bh"><h3>Rather book straight in?</h3><p>Pick a time with our consultant. It's free, on a video call, and you keep the numbers either way.</p></div>
+      <iframe src="https://api.leadconnectorhq.com/widget/booking/vdcNQ2PfFOz7TTyWejdZ" scrolling="no" id="vdcNQ2PfFOz7TTyWejdZ_booking_inline" title="Book your clinic call" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow center" style="text-align:center">Before you ask</p>
+    <h2 style="text-align:center">The quick questions</h2>
+    <div class="faq">
+      <details open><summary>Is it really free?</summary><p>Yes. We build the breakdown and walk you through it on a short call. There's no charge and no obligation to work with us. You keep the numbers either way.</p></details>
+      <details><summary>How long does it take?</summary><p>A couple of minutes to send us your details, then a 45-minute call where we go through exactly where your clinic is leaking booked consults and what each leak is worth.</p></details>
+      <details><summary>What happens after I send my details?</summary><p>We prepare your breakdown and ring you within one business day to walk through it. No pitch deck, no pressure.</p></details>
+      <details><summary>Do you touch our patient data?</summary><p>No. We look at your enquiry and booking flow, the business side, never patient records or anything clinical. Anything clinical always stays with your team.</p></details>
+      <details><summary>Does this replace my receptionist?</summary><p>No. It covers nights and weekends, the overflow when the desk is flat out, and the past patients nobody has time to call. Your team stays in charge of every patient.</p></details>
+      <details><summary>Are we locked into a contract?</summary><p>No lock-in. Plans run month to month, and you get a report every month showing exactly what came back.</p></details>
+      <details><summary>What does it cost?</summary><p>The audit is free. If there's something worth fixing, our consultant goes through the options and pricing on the call, so you can decide with the numbers in front of you.</p></details>
+      <details><summary>How fast can it be live?</summary><p>Within a week of sign-up. We build and connect everything, and your team keeps working as normal while we do.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section>
+  <div class="wrap">
+    <div class="founder">
+      <div class="badge">FBS</div>
+      <div>
+        <p>"Most clinics don't have a lead problem, they have a leak problem. You're already paying to bring patients in. Before you spend another dollar on ads, let us show you exactly what's slipping out the back, on your own numbers. If there's nothing worth fixing, we'll tell you that too."</p>
+        <p class="sig">The First Business Solutions team</p>
+      </div>
+    </div>
+    <div class="cta-center">
+      <a class="btn" href="#audit">Get My Free Leak Audit</a>
+    </div>
+  </div>
+</section>
+
+<div class="mstick"><a class="btn" href="#audit">Get my free audit</a><a class="btn ghost" href="#calculator">Try the calculator</a></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <p class="comply">AHPRA aware · No medical claims · Your patient data is never held hostage</p>
+    <div class="foot-row">
+      <div>© <span id="yr">2026</span> First Business Solutions · Registered Australian business</div>
+      <div>fbs-ai.com · Australian owned &amp; operated</div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://link.msgsndr.com/js/form_embed.js"></script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script>
+// Leak calculator. Rates match leak-calc.mjs defaults; headline counts one month's fee per patient (the low end).
+// UNGATED VARIANT (/check): full breakdown shows here straight away; values still pass to /thank-you via localStorage.
+(function(){
+  var RATE={close:.40,slowLost:.15,nsRecover:.50,reactivate:.03};
+  var $=function(id){return document.getElementById(id)};
+  var ids=['enq','miss','booked','ns','dorm','price','months'];
+  var fmt=function(n){return Math.round(n).toLocaleString('en-AU')};
+  var money=function(n){return '$'+fmt(n)};
+  function run(){
+    var v={};ids.forEach(function(k){v[k]=Number($(k).value)});
+    $('o-enq').textContent=fmt(v.enq);
+    $('o-miss').textContent=v.miss+'%';
+    $('o-booked').textContent=fmt(v.booked);
+    $('o-ns').textContent=v.ns+'%';
+    $('o-dorm').textContent=fmt(v.dorm);
+    $('o-price').textContent=money(v.price);
+    $('o-months').textContent=v.months+(v.months===1?' month':' months');
+    var missed=v.enq*(v.miss/100)*RATE.close;
+    var slow=v.enq*(1-v.miss/100)*RATE.slowLost*RATE.close;
+    var ns=v.booked*(v.ns/100)*RATE.nsRecover;
+    var dorm=v.dorm*RATE.reactivate;
+    var perMonth=missed+slow+ns;
+    $('r-month').textContent=money(perMonth*v.price);
+    $('r-missed').textContent=fmt(missed)+' a month';
+    $('r-slow').textContent=fmt(slow)+' a month';
+    $('r-ns').textContent=fmt(ns)+' a month';
+    $('r-dorm').textContent=fmt(dorm);
+    $('r-year').textContent=money(perMonth*12*v.price+dorm*v.price);
+    $('r-rec').textContent=money((perMonth*12+dorm)*v.price*v.months);
+    if(touched){try{localStorage.setItem('fbsLeakCalc',JSON.stringify(v))}catch(e){}
+      // Pass the figures into the CRM form's hidden fields (query keys = custom field keys), so the closer sees them on the contact.
+      var q={
+        leak_calc_monthly: money(perMonth*v.price)+' a month ('+fmt(perMonth)+' patients)',
+        leak_calc_yearly: money(perMonth*12*v.price+dorm*v.price)+' a year; recurring '+money((perMonth*12+dorm)*v.price*v.months),
+        leak_calc_inputs: fmt(v.enq)+' enquiries/mo, '+v.miss+'% unanswered, '+fmt(v.booked)+' booked/mo, '+v.ns+'% no-show, '+fmt(v.dorm)+' past patients, '+money(v.price)+'/mo fee, '+v.months+' months avg stay; variant ungated'
+      };
+      clearTimeout(srcTimer); srcTimer=setTimeout(function(){ if(formTouched) return;
+        var f=document.getElementById('inline-4Ptsr4cE2FJoQn5ySrIU'); if(!f) return;
+        var base=f.src.split('?')[0], qs=Object.keys(q).map(function(k){return k+'='+encodeURIComponent(q[k])}).join('&');
+        if(f.src!==base+'?'+qs) f.src=base+'?'+qs;
+      },700);
+    }
+  }
+  var srcTimer=null, formTouched=false;
+  // once the owner clicks into the form, stop reloading it so nothing they typed is lost
+  window.addEventListener('blur',function(){ if(document.activeElement&&document.activeElement.id==='inline-4Ptsr4cE2FJoQn5ySrIU') formTouched=true; });
+  var touched=false;
+  ids.forEach(function(k){$(k).addEventListener('input',function(){touched=true;run()})});
+  run();
+})();
+</script>
+</body>
+</html>
